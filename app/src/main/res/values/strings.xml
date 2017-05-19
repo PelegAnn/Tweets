@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Tweets</string>
+    <string name="hashtag">#hashtag</string>
+    <string name="search">Search</string>
+    <string name="access_token">accessToken</string>
+    <string name="has_access_token">has_access_token</string>
+    <string name="image">Tweet Image</string>
+</resources>
