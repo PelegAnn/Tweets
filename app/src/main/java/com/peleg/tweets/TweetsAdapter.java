@@ -90,7 +90,7 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
         textView.setText(tweet.getText());
 
         String path = tweet.getMediaImgUrl();
-        
+
         ImageView itemImageView = holder.mImage;
         itemImageView.setImageResource(R.drawable.placeholder);
         if(path != null) {
