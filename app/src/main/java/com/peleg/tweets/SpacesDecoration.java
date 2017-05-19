@@ -20,11 +20,11 @@ public class SpacesDecoration extends RecyclerView.ItemDecoration {
 
         outRect.left = mSpace;
         outRect.bottom = mSpace;
-        //outRect.right = mSpace;
 
+        int childAdapterPosition = parent.getChildAdapterPosition(view);
 
         // Add top margin only for the first item to avoid double space between items
-        if (parent.getChildAdapterPosition(view) == 0 || parent.getChildAdapterPosition(view) == 1)
+        if (childAdapterPosition == 0 || childAdapterPosition == 1)
             outRect.top = mSpace;
     }
 }

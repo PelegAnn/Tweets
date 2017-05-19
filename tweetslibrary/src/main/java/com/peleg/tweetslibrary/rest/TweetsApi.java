@@ -1,17 +1,12 @@
 package com.peleg.tweetslibrary.rest;
 
-import android.content.SharedPreferences;
-import android.util.Base64;
-
 import java.io.IOException;
 import okhttp3.Interceptor;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by hannypeleg on 5/17/17.
@@ -41,7 +36,6 @@ public class TweetsApi {
         if (retrofit==null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

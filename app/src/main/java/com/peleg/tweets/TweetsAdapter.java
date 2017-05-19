@@ -93,7 +93,6 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
         String path = tweet.getMediaImgUrl();
 
         ImageView itemImageView = holder.mImage;
-        itemImageView.setImageResource(R.drawable.placeholder);
         if(path != null) {
             Picasso.with(mContext).load(path)
                     .placeholder(R.drawable.placeholder)
