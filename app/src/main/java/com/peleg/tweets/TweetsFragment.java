@@ -8,10 +8,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +35,10 @@ public class TweetsFragment extends Fragment {
 
         mItems = TweetsList.getInstance().getList();
         mAdapter = new TweetsAdapter(mItems,getContext());
+
+        SpacesDecoration decoration = new SpacesDecoration(16);
+        tweetsRV.addItemDecoration(decoration);
+
         tweetsRV.setAdapter(mAdapter);
         tweetsRV.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         return view;

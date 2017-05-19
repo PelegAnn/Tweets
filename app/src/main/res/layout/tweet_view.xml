@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_image"
+            android:textStyle="bold"
             android:paddingLeft="@dimen/item_title_padding"
             android:paddingRight="@dimen/item_title_padding"
             android:paddingTop="@dimen/item_title_padding"
@@ -53,10 +54,10 @@
             android:paddingLeft="@dimen/item_title_padding"
             android:paddingRight="@dimen/item_title_padding"
             android:paddingTop="@dimen/item_title_padding"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white" />
 
 
-        <!--</LinearLayout>-->
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>
+

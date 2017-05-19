@@ -20,14 +20,17 @@ import retrofit2.http.Query;
 public interface TweetsApiInterface {
 
 
-    //https://api.twitter.com/1.1/search/tweets.json
     @GET("1.1/search/tweets.json")
     Call<TweetResponse> getTweets(@Query("q") String hashtag);
 
     @POST("oauth2/token")
-    @Headers({"Cache-Control: max-age=640000", "User-Agent: My-App-Name"})
+    @Headers({"Cache-Control: max-age=640000", "User-Agent: Tweets"})
     @FormUrlEncoded
     Call<OauthResponse> ObtainABearer(@Field("grant_type") String body);
+
+    @POST("oauth2/invalidate_token")
+    @Headers({"Content-Type: application/x-www-form-urlencoded;charset=UTF-8", "User-Agent: Tweets v1.0.23"})
+    Call<OauthResponse> InvalidatingABearer();
 
 
 

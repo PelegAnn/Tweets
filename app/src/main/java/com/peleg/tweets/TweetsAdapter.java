@@ -34,7 +34,7 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public TextView mUserName, mCreatedAt, mText;
+        public TextView mUserName, mText;
         public ImageView mImage;
         public CardView mCardView;
 
@@ -61,6 +61,7 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
             Log.e("HELLO"," OnClick! " + view.getId());
             Snackbar.make(view, "On CLick! ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+
         }
 
         @Override
@@ -80,7 +81,8 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+
         Tweet tweet = mItems.get(position);
 
         TextView nameView = holder.mUserName;
@@ -107,9 +109,6 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
         return mItems.size();
     }
 
-    public Context getContext() {
-        return mContext;
-    }
 
     public void addAll(List<Tweet> tweets) {
         if(mItems!=null) {

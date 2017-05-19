@@ -25,9 +25,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnNewTweetsListener{
 
+    private static final String TAG = MainActivity.class.getName();
+
     public static final String CONSUMER_KEY = "XGekuI7ujEA2EjMfVhqUcgyJV";
     public static final String CONSUMER_SECRET = "gAX2mTs4SEEkGmHuI09h9Wo5EYrZ7IGYrY51UMBIonMIyLECQZ";
-    private static final String TAG = MainActivity.class.getName();
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the two
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
         if(!sharedPref.getBoolean(getString(R.string.has_access_token),false))
             getAccessToken();
 
-        TweetsApi.setAuthValue("Bearer "+sharedPref.getString(getString(R.string.access_token),"error"));
+        addBearer();
 
 
     }
@@ -83,20 +85,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
     }
 
     // Encodes the consumer key and secret to create the basic authorization key
-    private static String encodeKeys(String consumerKey, String consumerSecret) {
+    private static void encodeKeys(String consumerKey, String consumerSecret) {
 
-            String fullKey = consumerKey + ":" + consumerSecret;
-            String str = Base64.encodeToString(fullKey.getBytes(),Base64.NO_WRAP);
+        String fullKey = consumerKey + ":" + consumerSecret;
+        String str = Base64.encodeToString(fullKey.getBytes(),Base64.NO_WRAP);
 
-            TweetsApi.setAuthValue("Basic "+str);
-
-            return "Basic "+str;
+        TweetsApi.setAuthValue("Basic "+str);
     }
 
     @Override
     public void onNewTweets(List<Tweet> items) {
+        // Navigate to TweetsFragment
         mViewPager.setCurrentItem(1);
         mSectionsPagerAdapter.add(items);
+    }
+
+    private void addBearer() {
+        TweetsApi.setAuthValue("Bearer "+sharedPref.getString(getString(R.string.access_token),"error"));
     }
 
 
@@ -153,5 +158,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
         }
 
     }
+
 
 }
