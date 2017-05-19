@@ -5,9 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.test.suitebuilder.TestMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import java.util.List;
 
 /**
@@ -19,6 +22,7 @@ public class TweetsFragment extends Fragment {
     private List<Tweet> mItems;
     private TweetsAdapter mAdapter;
     private RecyclerView tweetsRV;
+    private TextView noResults;
 
     public static TweetsFragment newInstance() {
         return new TweetsFragment();
@@ -33,6 +37,8 @@ public class TweetsFragment extends Fragment {
 
         tweetsRV = (RecyclerView) view.findViewById(R.id.tweets_list);
 
+        noResults = (TextView) view.findViewById(R.id.no_result_text);
+
         mItems = TweetsList.getInstance().getList();
         mAdapter = new TweetsAdapter(mItems,getContext());
 
@@ -45,7 +51,12 @@ public class TweetsFragment extends Fragment {
     }
 
     public void updateList(List<Tweet> items) {
-        tweetsRV.setVisibility(View.VISIBLE);
+        if(items.size() == 0) {
+            tweetsRV.setVisibility(View.GONE);
+            noResults.setVisibility(View.VISIBLE);
+        } else {
+            tweetsRV.setVisibility(View.VISIBLE);
+        }
         TweetsList.getInstance().setItems(items);
         if(mAdapter!= null) {
            mAdapter.addAll(items);
