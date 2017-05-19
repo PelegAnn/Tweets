@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
 
     private static final String TAG = MainActivity.class.getName();
 
-    public static final String CONSUMER_KEY = "XGekuI7ujEA2EjMfVhqUcgyJV";
-    public static final String CONSUMER_SECRET = "gAX2mTs4SEEkGmHuI09h9Wo5EYrZ7IGYrY51UMBIonMIyLECQZ";
+    public static final String CONSUMER_KEY = "tn4tESYeJ4E95pmEbqz2DRX6K";
+    public static final String CONSUMER_SECRET = "s18o2Q0OYqh7gJAJliukD2wPZFYt4vVMT4hEKYEpfN4MweYKwx";
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -53,10 +53,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
 
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
-        if(!sharedPref.getBoolean(getString(R.string.has_access_token),false))
+        if(!sharedPref.getBoolean(getString(R.string.has_access_token),false)) {
             getAccessToken();
+        }
 
-        addBearer();
+
 
 
     }
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
                     editor.putBoolean(getString(R.string.has_access_token),true);
                     if(response.body().getTokenType().equals("bearer")) {
                         editor.putString(getString(R.string.access_token), response.body().getAccessToken()).apply();
+                        addBearer();
                     }
                 }
             }

@@ -22,6 +22,7 @@ import java.util.List;
 
 class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
+    private static final String TAG = TweetsAdapter.class.getName();
     private List<Tweet> mItems;
     private Context mContext;
 
@@ -58,9 +59,7 @@ class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            Log.e("HELLO"," OnClick! " + view.getId());
-            Snackbar.make(view, "On CLick! ", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Log.e(TAG," OnClick! " + view.getId());
 
         }
 
