@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,6 +44,8 @@ public class MainFragment extends Fragment {
 
     private List<Tweet> tweets;
 
+    private View mView;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -57,9 +61,9 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        mView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        hashtagET = (TextInputEditText) view.findViewById(R.id.search_text);
+        hashtagET = (TextInputEditText) mView.findViewById(R.id.search_text);
         hashtagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -70,63 +74,78 @@ public class MainFragment extends Fragment {
                 return false;
             }
         });
-        search = (Button) view.findViewById(R.id.search_btn);
+        search = (Button) mView.findViewById(R.id.search_btn);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideSoftKeyboard(getActivity());
                 searchTweets();
             }
         });
-        return view;
+        return mView;
     }
 
     private void searchTweets() {
-        TweetsApiInterface apiService = TweetsApi.getClient().create(TweetsApiInterface.class);
-        String hashtag = validateInput();
-        if (hashtag != null) {
-            Call<TweetResponse> call = apiService.getTweets(hashtag);
-            call.enqueue(new Callback<TweetResponse>() {
-                @Override
-                public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
-                    if (response.code() == 200) {
-                        tweets = new ArrayList<>();
-                        for (Status s : response.body().getStatuses()) {
-                            Tweet tweet = new Tweet();
-                            tweet.setCreatedAt(s.getCreatedAt());
-                            tweet.setText(s.getText());
-                            tweet.setScreenName(s.getUser().getScreenName());
-                            tweet.setMediaImgUrl(s.getUser().getProfileImageUrlHttps().replace("_normal", "_400x400"));
+        hideSoftKeyboard(getActivity());
+        // network connection required
+        if(MainActivity.isConnected(getContext())) {
+            TweetsApiInterface apiService = TweetsApi.getClient().create(TweetsApiInterface.class);
+            String hashtag = validateInput();
+            if (hashtag != null) {
+                Call<TweetResponse> call = apiService.getTweets(hashtag);
+                call.enqueue(new Callback<TweetResponse>() {
+                    @Override
+                    public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
+                        if (response.code() == 200) {
+                            tweets = new ArrayList<>();
+                            for (Status s : response.body().getStatuses()) {
+                                Tweet tweet = new Tweet();
+                                tweet.setCreatedAt(s.getCreatedAt());
+                                tweet.setText(s.getText());
+                                tweet.setScreenName(s.getUser().getScreenName());
+                                tweet.setMediaImgUrl(s.getUser().getProfileImageUrlHttps().replace("_normal", "_400x400"));
 
-                            tweets.add(tweet);
+                                tweets.add(tweet);
+                            }
+
+                            mCallback.onNewTweets(tweets);
+                        } else {
+                            hideSoftKeyboard(getActivity());
+                            String errorCode = String.valueOf(response.code());
+                            Log.e(TAG,errorCode);
+                            Snackbar.make(mView, getString(R.string.error_accured) + " "+ errorCode, Snackbar.LENGTH_LONG)
+                                    .show();
                         }
-
-                        mCallback.onNewTweets(tweets);
                     }
-                }
 
-                @Override
-                public void onFailure(Call<TweetResponse> call, Throwable t) {
-                    Log.e(TAG, t.toString());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<TweetResponse> call, Throwable t) {
+                        Log.e(TAG, t.toString());
+                    }
+                });
+            }
+        } else {
+            Snackbar.make(mView, getString(R.string.connection_required), Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
 
     private String validateInput() {
         String hashtag = null;
         String hashtagTerm = hashtagET.getText().toString();
-        if(hashtagTerm.isEmpty())
-            return null;
-        if(hashtagTerm.charAt(0)!='#') {
-            hashtag = '#' + hashtagTerm;
-        } else {
-            hashtag = hashtagTerm;
-        }
-        try {
-            hashtag = URLEncoder.encode(hashtag,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+
+        if (!TextUtils.isEmpty(hashtagTerm)) {
+
+            // If not an hashtag, add #
+            if (hashtagTerm.charAt(0) != '#') {
+                hashtag = '#' + hashtagTerm;
+            } else {
+                hashtag = hashtagTerm;
+            }
+            try {
+                hashtag = URLEncoder.encode(hashtag, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         return hashtag;

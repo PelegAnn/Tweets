@@ -45,6 +45,7 @@ public class TweetsFragment extends Fragment {
     }
 
     public void updateList(List<Tweet> items) {
+        tweetsRV.setVisibility(View.VISIBLE);
         TweetsList.getInstance().setItems(items);
         if(mAdapter!= null) {
            mAdapter.addAll(items);

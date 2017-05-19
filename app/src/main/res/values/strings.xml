@@ -5,4 +5,7 @@
     <string name="access_token">accessToken</string>
     <string name="has_access_token">has_access_token</string>
     <string name="image">Tweet Image</string>
+    <string name="connection_required">Network connection required</string>
+    <string name="no_result">No results, try again!</string>
+    <string name="error_accured">Error accured</string>
 </resources>

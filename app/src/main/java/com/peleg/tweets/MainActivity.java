@@ -2,6 +2,9 @@ package com.peleg.tweets;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -53,13 +56,26 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnNe
 
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
-        if(!sharedPref.getBoolean(getString(R.string.has_access_token),false)) {
-            getAccessToken();
+        if(!isConnected(this)) {
+            Snackbar.make(mViewPager, getString(R.string.connection_required), Snackbar.LENGTH_LONG)
+                    .show();
+        } else {
+            // check if we have already bearer saved
+            if (!sharedPref.getBoolean(getString(R.string.has_access_token), false)) {
+                getAccessToken();
+            } else {
+                addBearer();
+            }
         }
+    }
 
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-
-
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 
     private void getAccessToken() {

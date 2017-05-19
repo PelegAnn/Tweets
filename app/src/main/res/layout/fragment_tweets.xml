@@ -6,7 +6,16 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tweets_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/no_result_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_result"
+        android:visibility="visible"/>
 
 </LinearLayout>

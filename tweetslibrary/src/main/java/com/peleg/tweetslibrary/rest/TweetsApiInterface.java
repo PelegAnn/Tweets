@@ -24,7 +24,7 @@ public interface TweetsApiInterface {
     Call<TweetResponse> getTweets(@Query("q") String hashtag);
 
     @POST("oauth2/token")
-    @Headers({"Cache-Control: max-age=640000", "User-Agent: My-App-Name"})
+    @Headers({"Cache-Control: max-age=640000", "User-Agent: Tweets"})
     @FormUrlEncoded
     Call<OauthResponse> ObtainABearer(@Field("grant_type") String body);
 
