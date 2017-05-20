@@ -1,6 +1,7 @@
 package com.peleg.tweets;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,6 +47,8 @@ public class MainFragment extends Fragment {
 
     private View mView;
 
+    private ProgressDialog progressDialog;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -62,6 +65,11 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle(getString(R.string.loading));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         hashtagET = (TextInputEditText) mView.findViewById(R.id.search_text);
         hashtagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -86,6 +94,7 @@ public class MainFragment extends Fragment {
 
     private void searchTweets() {
         hideSoftKeyboard(getActivity());
+        progressDialog.show();
         // network connection required
         if(MainActivity.isConnected(getContext())) {
             TweetsApiInterface apiService = TweetsApi.getClient().create(TweetsApiInterface.class);
@@ -95,6 +104,7 @@ public class MainFragment extends Fragment {
                 call.enqueue(new Callback<TweetResponse>() {
                     @Override
                     public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
+                        progressDialog.dismiss();
                         if (response.code() == 200) {
                             tweets = new ArrayList<>();
                             for (Status s : response.body().getStatuses()) {
@@ -119,6 +129,7 @@ public class MainFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<TweetResponse> call, Throwable t) {
+                        progressDialog.dismiss();
                         Log.e(TAG, t.toString());
                     }
                 });
